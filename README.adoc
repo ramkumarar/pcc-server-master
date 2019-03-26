@@ -1,0 +1,43 @@
+:toc: right
+:toc-title: Contents
+
+:icons: font
+
+= Pivotal Cloud Cache Server
+
+== Overview
+
+This runs an embedded spring-boot based pcc (gemfire/geode) cache server that will have both manager and locator part of it.
+
+== Getting Started
+As always with spring-boot, a simple annotation would get you started. Annotate the main class with
+```
+@CacheServerApplication
+```
+to get started with an embedded cache server. Following annotations would configure manager and locator as well.
+```
+@EnableLocator
+@EnableManger
+```
+
+== Customization
+If the default needs to be changed, let's say the locator listen port needs to be custom configured, then
+```
+@EnableLocator(port = 20388)
+```
+In a similar way, other options can be configured for the manager and cache server.
+
+== Cache creation
+Following code would initialize the Partitioned cache region in the embedded server,
+```
+@Bean(name = "formula1region")
+	PartitionedRegionFactoryBean formual1Region(Cache gemfireCache) {
+		PartitionedRegionFactoryBean f1 = new PartitionedRegionFactoryBean<>();
+		f1.setCache(gemfireCache);
+		f1.setClose(false);
+		f1.setPersistent(false);
+		return f1;
+	}
+```
+This initialises a region named `formula1region` in the embedded cache server.
+
